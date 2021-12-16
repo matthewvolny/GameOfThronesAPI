@@ -1,4 +1,4 @@
-PWD<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
@@ -24,6 +24,17 @@ PWD<!DOCTYPE html>
       const images = document.querySelector(".images");
       const info = document.querySelector(".info");
 
+      const renderCharacterInfo = (characterName, houseNames) => {
+        console.log(characterName);
+        console.log(houseNames);
+        info.innerHTML = "";
+        info.innerHTML = `<div>${characterName}</div>`;
+        for (i = 0; i < houseNames.length; i++) {
+          info.innerHTML += `<div>${houseNames[i]}</div>`;
+          console.log(houseNames[i]);
+        }
+      };
+
       button.addEventListener("click", (event) => {
         event.preventDefault();
         let searchString = document.querySelector(".input").value;
@@ -31,15 +42,22 @@ PWD<!DOCTYPE html>
         console.log(urlEncodedSearchString);
         getHouseInfo();
         async function getHouseInfo() {
-          const response = await fetch(
+          const characterResponse = await fetch(
             `https://www.anapioficeandfire.com/api/characters?name=${urlEncodedSearchString}`
           );
-          const result = await response.json().then((data) => {
-            console.log(data);
-            console.log(data[0].aliases);
-            // info.innerHTML = data[0].aliases;
-            // renderInfo(data);
+          const characterData = await characterResponse.json();
+          let characterName = characterData[0].name;
+          let HouseDataArray = characterData[0].allegiances;
+          let houseNames = [];
+          await HouseDataArray.forEach((house) => {
+            getHouseInfo(house);
+            async function getHouseInfo(house) {
+              const houseResponse = await fetch(`${house}`);
+              const houseData = await houseResponse.json();
+              await houseNames.push(houseData.name);
+            }
           });
+          renderCharacterInfo(characterName, houseNames);
         }
       });
     </script>
