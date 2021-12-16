@@ -1,0 +1,47 @@
+PWD<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    <div class="container">
+      <header>
+        <button>Search</button>
+        <input type="text" class="input" />
+      </header>
+      <main>
+        <div class="info"></div>
+      </main>
+    </div>
+
+    <script>
+      const button = document.querySelector("button");
+      const div = document.querySelector("text");
+      const input = document.querySelector(".input");
+      const images = document.querySelector(".images");
+      const info = document.querySelector(".info");
+
+      button.addEventListener("click", (event) => {
+        event.preventDefault();
+        let searchString = document.querySelector(".input").value;
+        let urlEncodedSearchString = encodeURIComponent(searchString);
+        console.log(urlEncodedSearchString);
+        getHouseInfo();
+        async function getHouseInfo() {
+          const response = await fetch(
+            `https://www.anapioficeandfire.com/api/characters?name=${urlEncodedSearchString}`
+          );
+          const result = await response.json().then((data) => {
+            console.log(data);
+            console.log(data[0].aliases);
+            // info.innerHTML = data[0].aliases;
+            // renderInfo(data);
+          });
+        }
+      });
+    </script>
+  </body>
+</html>
